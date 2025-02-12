@@ -7,7 +7,7 @@ import torch
 
 # Load CSV file
 df = pd.read_csv("BigBasket Products.csv")
-# df = df.head(10000)  # Limit to first 1000 records for faster processing
+# df = df.head(100)  # Limit to first 1000 records for faster processing
 
 # Concatenate relevant columns into a single text field
 df["combined_text"] = df[["product", "category", "sub_category", "type", "description"]].astype(str).agg(" ".join, axis=1)
@@ -44,7 +44,7 @@ def convert_text_embedding(text, idx):
         print(f"Processed {idx} records for text embeddings")
     return model.encode(text).tolist()
 
-model = SentenceTransformer("all-MiniLM-L6-v2", device=device)  # Small, efficient model
+model = SentenceTransformer("all-mpnet-base-v2", device=device)  # Small, efficient model
 
 print(f"Using device: {device}")
 print("Generating embeddings of combined text...")
@@ -92,11 +92,12 @@ vectorizer = TfidfVectorizer(stop_words="english", max_features=30)  # Limit fea
 vectorizer.fit(training_df["combined_text"])  # Fit TF-IDF on full dataset
 
 # Load the product tokens dictionary if it exists
+token_analyzer = vectorizer.build_analyzer()
 def tokenize_text(text, idx):
     # Function to tokenize text using TF-IDF
     if idx % 100 == 0:
         print(f"Processed {idx} records for tokenization")
-    return vectorizer.build_analyzer()(text)
+    return token_analyzer(text)
 
 product_feature_tokens = {}
 try:

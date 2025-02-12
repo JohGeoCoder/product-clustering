@@ -3,3 +3,6 @@ product_combined_text_embeddings.json
 product_description_embeddings.json
 product_feature_tokens.json
 token_embedding_dictionary.json
+product_clusters_combined_text.json
+product_clusters_token.json
+product_clusters.json
